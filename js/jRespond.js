@@ -19,8 +19,9 @@
 		// array of media query breakpoints; adjust as needed
 		var mediaBreakpoints = breakpoints;
 
-		// store the current breakpoint
+		// store the current breakpoint, store previous breakpoint
 		var curr = '';
+		var prvBrkpt = '';
 
 		// window resize event timer stuff
 		var resizeTimer;
@@ -69,7 +70,7 @@
 
 			if (testForCurr(brkpt)) {
 				if (entr !== undefined) {
-					entr.call();
+					entr.call(this, curr, prvBrkpt || '');
 				}
 				mediaInit[(mediaListeners.length - 1)] = true;
 			}
@@ -108,12 +109,12 @@
 
 			// loop through exit functions to call
 			for (var j = 0; j < exitArray.length; j++) {
-				exitArray[j].call();
+				exitArray[j].call(this, curr, prvBrkpt);
 			}
 
 			// then loop through enter functions to call
 			for (var k = 0; k < enterArray.length; k++) {
-				enterArray[k].call();
+				enterArray[k].call(this, curr, prvBrkpt);
 			}
 		};
 
@@ -135,6 +136,7 @@
 
 			// if breakpoint is found and it's not the current one
 			if (foundBrkpt && curr !== mediaBreakpoints[i]['label']) {
+				prvBrkpt = curr;
 				curr = mediaBreakpoints[i]['label'];
 
 				// run the loop
@@ -198,7 +200,8 @@
 		// return
 		return {
 			addFunc: function(elm) { addFunction(elm); },
-			getBreakpoint: function() { return curr; }
+			getBreakpoint: function() { return curr; },
+			getPrvBreakpoint: function() { return prvBrkpt || ''; }
 		};
 
 	};
