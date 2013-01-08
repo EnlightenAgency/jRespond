@@ -70,7 +70,7 @@
 
 			if (testForCurr(brkpt)) {
 				if (entr !== undefined) {
-					entr.call(this, curr, prvBrkpt || '');
+					entr.call(this, curr, prvBrkpt);
 				}
 				mediaInit[(mediaListeners.length - 1)] = true;
 			}
@@ -201,7 +201,7 @@
 		return {
 			addFunc: function(elm) { addFunction(elm); },
 			getBreakpoint: function() { return curr; },
-			getPrvBreakpoint: function() { return prvBrkpt || ''; }
+			getPrvBreakpoint: function() { return prvBrkpt; }
 		};
 
 	};

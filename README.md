@@ -45,10 +45,10 @@ Once running, functions can be registered with jRespond along with a desired bre
 // register enter and exit functions for a single breakpoint
 jRes.addFunc({
 	breakpoint: 'desktop',
-	enter: function() {
+	enter: function(bp, prvBp) {
 		myInitFunc();
 	},
-	exit: function() {
+	exit: function(bp, prvBp) {
 		myUnInitFunc();
 	}
 });
@@ -60,10 +60,10 @@ Or an array of breakpoints:
 // register enter and exit functions for multiple breakpoints
 jRes.addFunc({
 	breakpoint: ['desktop','laptop'],
-	enter: function() {
+	enter: function(bp, prvBp) {
 		myInitFunc();
 	},
-	exit: function() {
+	exit: function(bp, prvBp) {
 		myUnInitFunc();
 	}
 });
@@ -75,11 +75,26 @@ Use '*' to run a function at every breakpoint:
 // register enter and exit functions for every breakpoint
 jRes.addFunc({
 	breakpoint: '*',
-	enter: function() {
+	enter: function(bp, prvBp) {
 		myInitFunc();
 	},
-	exit: function() {
+	exit: function(bp, prvBp) {
 		myUnInitFunc();
+	}
+});
+```
+
+If you want to add a class to the body on each breakpoint change (with jQuery):
+
+``` JavaScript
+// register enter and exit functions for every breakpoint
+jRes.addFunc({
+	breakpoint: '*',
+	enter: function(bp, prvBp) {
+		$(document.body).addClass(bp);
+	},
+	exit: function(bp, prvBp) {
+		$(document.body).removeClass(prvBp);
 	}
 });
 ```
@@ -92,6 +107,8 @@ jRes.getBreakpoint();
 ```
 
 The breakpoint parameter is required but the enter and exit parameters are optional (of course, at least one is required for something to happen).
+
+The enter and/or exit functions are passed the current breakpoint and (if it exists) the previous breakpoint as parameters.
 
 ##Performance
 
