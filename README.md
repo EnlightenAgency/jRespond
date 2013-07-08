@@ -21,18 +21,22 @@ After including jRespond.js, call jRespond and define as many or as few media br
 var jRes = jRespond([
 	{
 		label: 'handheld',
+		mq: 'only screen and (max-width: 767px)',
 		enter: 0,
 		exit: 767
 	},{
 		label: 'tablet',
+		mq: 'only screen and (min-width: 768px) and (max-width: 979px)',
 		enter: 768,
 		exit: 979
 	},{
 		label: 'laptop',
+		mq: 'only screen and (min-width: 980px) and (max-width: 1199px)',
 		enter: 980,
 		exit: 1199
 	},{
 		label: 'desktop',
+		mq: 'only screen and (min-width: 1200px)',
 		enter: 1200,
 		exit: 10000
 	}
