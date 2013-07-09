@@ -1,9 +1,5 @@
-/*
- * jRespond.js (a simple way to globally manage javascript on responsive websites)
- * version 0.8.3
- * (c) 2012 Jeremy Fields [jeremy.fields@viget.com]
- * released under the MIT license
- */
+/*! jRespond.js v 0.10 | Author: Jeremy Fields [jeremy.fields@viget.com], 2013 | License: MIT */
+
 (function(win,doc,undefined) {
 
 	'use strict';
@@ -21,7 +17,9 @@
 
 		// store the current breakpoint, store previous breakpoint
 		var curr = '';
-		var prvBrkpt = '';
+
+		// the previous breakpoint
+		var prev = '';
 
 		// window resize event timer stuff
 		var resizeTimer;
@@ -36,7 +34,7 @@
 			var w = 0;
 
 			// IE
-			if (!window.innerWidth) {
+			if (typeof( window.innerWidth ) != 'number') {
 
 				if (!(document.documentElement.clientWidth === 0)) {
 
@@ -56,9 +54,19 @@
 			return w;
 		};
 
-		// send media to the mediaListeners array
+		// determine input type
 		var addFunction = function(elm) {
+			if (elm.length === undefined) {
+				addToStack(elm);
+			} else {
+				for (var i = 0; i < elm.length; i++) {
+					addToStack(elm[i]);
+				}
+			}
+		};
 
+		// send media to the mediaListeners array
+		var addToStack = function(elm) {
 			var brkpt = elm['breakpoint'];
 			var entr = elm['enter'] || undefined;
 
@@ -70,7 +78,7 @@
 
 			if (testForCurr(brkpt)) {
 				if (entr !== undefined) {
-					entr.call(this, curr, prvBrkpt);
+					entr.call(null, {entering : curr, exiting : prev});
 				}
 				mediaInit[(mediaListeners.length - 1)] = true;
 			}
@@ -78,7 +86,7 @@
 
 		// loops through all registered functions and determines what should be fired
 		var cycleThrough = function() {
-			
+
 			var enterArray = [];
 			var exitArray = [];
 
@@ -107,14 +115,19 @@
 				}
 			}
 
+			var eventObject = {
+				entering : curr,
+				exiting : prev
+			};
+
 			// loop through exit functions to call
 			for (var j = 0; j < exitArray.length; j++) {
-				exitArray[j].call(this, curr, prvBrkpt);
+				exitArray[j].call(null, eventObject);
 			}
 
 			// then loop through enter functions to call
 			for (var k = 0; k < enterArray.length; k++) {
-				enterArray[k].call(this, curr, prvBrkpt);
+				enterArray[k].call(null, eventObject);
 			}
 		};
 
@@ -143,7 +156,7 @@
 
 			// if breakpoint is found and it's not the current one
 			if (foundBrkpt && curr !== mediaBreakpoints[i]['label']) {
-				prvBrkpt = curr;
+				prev = curr;
 				curr = mediaBreakpoints[i]['label'];
 
 				// run the loop
@@ -208,7 +221,7 @@
 		return {
 			addFunc: function(elm) { addFunction(elm); },
 			getBreakpoint: function() { return curr; },
-			getPrvBreakpoint: function() { return prvBrkpt; }
+			getPrvBreakpoint: function() { return prev; }
 		};
 
 	};

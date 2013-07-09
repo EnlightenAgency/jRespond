@@ -52,10 +52,10 @@ Once running, functions can be registered with jRespond along with a desired bre
 // register enter and exit functions for a single breakpoint
 jRes.addFunc({
 	breakpoint: 'desktop',
-	enter: function(bp, prvBp) {
+	enter: function(bpContext) {
 		myInitFunc();
 	},
-	exit: function(bp, prvBp) {
+	exit: function(bpContext) {
 		myUnInitFunc();
 	}
 });
@@ -67,13 +67,46 @@ Or an array of breakpoints:
 // register enter and exit functions for multiple breakpoints
 jRes.addFunc({
 	breakpoint: ['desktop','laptop'],
-	enter: function(bp, prvBp) {
+	enter: function(bpContext) {
 		myInitFunc();
 	},
-	exit: function(bp, prvBp) {
+	exit: function(bpContext) {
 		myUnInitFunc();
 	}
 });
+```
+
+Or an array of breakpoints and functions:
+
+``` JavaScript
+// register enter and exit functions for multiple breakpoints and functions
+jRes.addFunc([
+	{
+		breakpoint: 'desktop',
+		enter: function(bpContext) {
+			myInitFuncDesktop();
+		},
+		exit: function(bpContext) {
+			myUnInitFuncDesktop();
+		}
+	},{
+		breakpoint: 'laptop',
+		enter: function(bpContext) {
+			myInitFuncLaptop();
+		},
+		exit: function(bpContext) {
+			myUnInitFuncLaptop();
+		}
+	},{
+		breakpoint: 'tablet',
+		enter: function(bpContext) {
+			myInitFuncTablet();
+		},
+		exit: function(bpContext) {
+			myUnInitFuncTablet();
+		}
+	}
+]);
 ```
 
 Use '*' to run a function at every breakpoint:
@@ -82,10 +115,10 @@ Use '*' to run a function at every breakpoint:
 // register enter and exit functions for every breakpoint
 jRes.addFunc({
 	breakpoint: '*',
-	enter: function(bp, prvBp) {
+	enter: function(bpContext) {
 		myInitFunc();
 	},
-	exit: function(bp, prvBp) {
+	exit: function(bpContext) {
 		myUnInitFunc();
 	}
 });
@@ -97,11 +130,11 @@ If you want to add a class to the body on each breakpoint change (with jQuery):
 // register enter and exit functions for every breakpoint
 jRes.addFunc({
 	breakpoint: '*',
-	enter: function(bp, prvBp) {
-		$(document.body).addClass(bp);
+	enter: function(bpContext) {
+		$(document.body).addClass(bpContext.entering);
 	},
-	exit: function(bp, prvBp) {
-		$(document.body).removeClass(prvBp);
+	exit: function(bpContext) {
+		$(document.body).removeClass(bpContext.exiting);
 	}
 });
 ```
