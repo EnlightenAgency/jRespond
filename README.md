@@ -43,6 +43,9 @@ var jRes = jRespond([
 ]);
 ```
 
+The mediaquery (mq) parameter is optional, and will fallback to use browser width if undefined.
+
+
 Once running, functions can be registered with jRespond along with a desired breakpoint:
 
 ``` JavaScript
@@ -103,11 +106,13 @@ jRes.addFunc({
 });
 ```
 
-Ask jRespond what the current breakpoint is at any time:
+Ask jRespond what the current or previous breakpoint is at any time:
 
 ``` JavaScript
 // get the current breakpoint
 jRes.getBreakpoint();
+// get the previous breakpoint
+jRes.getPrevBreakpoint();
 ```
 
 The breakpoint parameter is required but the enter and exit parameters are optional (of course, at least one is required for something to happen).
